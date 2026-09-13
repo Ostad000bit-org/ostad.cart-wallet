@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ترید استاد – Ostad Trade</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b0f1a; --card:#131a2b; --border:#1f2a44; --text:#e6ecff; --muted:#8b97b8; --accent:#f3ba2f; --accent2:#6c8cff; --ok:#3ddc97; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Vazirmatn',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  nav { display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto; padding:20px; flex-wrap:wrap; gap:10px; }
+  nav a { color:var(--muted); text-decoration:none; margin-right:16px; } nav a.active,nav a:hover { color:var(--accent); }
+  header { text-align:center; padding:20px 20px 10px; }
+  header h1 { font-size:1.9rem; font-weight:800; } header p { color:var(--muted); margin-top:6px; }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 20px 60px; display:grid; grid-template-columns:420px 1fr; gap:22px; }
+  @media (max-width:900px){ .wrap { grid-template-columns:1fr; } }
+  .panel { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px; margin-bottom:22px; }
+  .panel h2 { font-size:1.05rem; margin-bottom:14px; color:var(--accent); display:flex; justify-content:space-between; align-items:center; }
+  label { display:block; color:var(--muted); font-size:.82rem; margin:12px 0 6px; }
+  input,select { width:100%; background:#0d1322; border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:12px; font-family:inherit; font-size:1rem; outline:none; }
+  input:focus,select:focus { border-color:var(--accent2); }
+  .btn { width:100%; margin-top:16px; background:var(--accent); color:#000; border:0; padding:14px; border-radius:12px; font-family:inherit; font-weight:800; font-size:1rem; cursor:pointer; }
+  .btn.ghost { background:transparent; color:var(--accent2); border:1px solid var(--border); margin-top:10px; font-weight:600; }
+  .btn.sm { width:auto; padding:6px 12px; margin:0; font-size:.8rem; }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+  .box { background:#0d1322; border:1px solid var(--border); border-radius:14px; padding:14px; margin-top:8px; }
+  .box .top { display:flex; justify-content:space-between; color:var(--muted); font-size:.78rem; margin-bottom:6px; }
+  .box .in { display:flex; gap:10px; align-items:center; }
+  .box .in input { flex:1; border:0; background:transparent; font-size:1.5rem; padding:4px 0; direction:ltr; text-align:left; }
+  .tok { display:flex; align-items:center; gap:8px; background:rgba(212,160,23,.12); border:1px solid rgba(212,160,23,.5); border-radius:999px; padding:6px 12px; cursor:pointer; white-space:nowrap; font-weight:700; }
+  .tok img { width:24px; height:24px; border-radius:50%; background:#fff; }
+  .flip { text-align:center; margin:-6px 0; position:relative; z-index:1; }
+  .flip button { width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--card); color:var(--accent); cursor:pointer; font-size:1.1rem; }
+  .row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px dashed var(--border); font-size:.85rem; }
+  .row span:first-child { color:var(--muted); } .row span:last-child { direction:ltr; font-weight:600; }
+  .row.warn span:last-child { color:#ff8a8a; } .row.ok span:last-child { color:var(--ok); }
+  .status { margin-top:12px; padding:10px; border-radius:10px; font-size:.85rem; text-align:center; line-height:1.7; word-break:break-all; }
+  .status.lock { background:rgba(255,80,80,.1); color:#ff8a8a; border:1px solid rgba(255,80,80,.3); }
+  .status.ok { background:rgba(61,220,151,.1); color:var(--ok); border:1px solid rgba(61,220,151,.3); }
+  .status.info { background:rgba(108,140,255,.1); color:#b8c6ff; border:1px solid rgba(108,140,255,.3); }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; } .chip { padding:6px 12px; border-radius:999px; border:1px solid var(--border); font-size:.8rem; cursor:pointer; color:var(--muted); }
+  .chip.sel { border-color:var(--accent); color:var(--accent); }
+  .wallet { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .pill { background:#0d1322; border:1px solid var(--border); border-radius:999px; padding:8px 14px; font-size:.8rem; direction:ltr; }
+  .pill.ok { border-color:var(--ok); color:var(--ok); }
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .modal.on { display:flex; }
+  .modal .card { background:var(--card); border:1px solid var(--border); border-radius:18px; width:100%; max-width:460px; max-height:80vh; overflow:auto; padding:18px; }
+  .tl { display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; cursor:pointer; } .tl:hover { background:rgba(255,255,255,.05); }
+  .tl img { width:32px; height:32px; border-radius:50%; background:#fff; }
+  .tl small { color:var(--muted); display:block; font-size:.7rem; direction:ltr; text-align:right; }
+  .tl .bal { margin-right:auto; direction:ltr; font-size:.85rem; color:var(--ok); }
+  .mono { font-family:monospace; direction:ltr; font-size:.75rem; color:var(--muted); word-break:break-all; }
+  iframe { width:100%; height:520px; border:0; border-radius:14px; background:#0d1322; }
+  table { width:100%; border-collapse:collapse; font-size:.82rem; } td,th { padding:8px 6px; border-bottom:1px dashed var(--border); text-align:right; } th { color:var(--muted); font-weight:600; }
+  td a { color:var(--accent2); text-decoration:none; direction:ltr; }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--accent); color:#000; padding:10px 20px; border-radius:10px; font-weight:600; opacity:0; transition:.3s; pointer-events:none; z-index:60; }
+  .toast.show { opacity:1; }
+  .gas { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
+  .gas div { background:#0d1322; border:1px solid var(--border); border-radius:12px; padding:10px; text-align:center; cursor:pointer; }
+  .gas div.sel { border-color:var(--accent); } .gas small { color:var(--muted); display:block; font-size:.7rem; } .gas b { direction:ltr; display:block; }
+  .note { font-size:.76rem; color:var(--muted); margin-top:12px; line-height:1.7; }
+  .tabs { display:flex; gap:6px; margin-bottom:12px; } .tabs button { flex:1; padding:10px; border-radius:12px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:inherit; cursor:pointer; font-weight:700; }
+  .tabs button.sel { background:rgba(212,160,23,.15); color:var(--accent); border-color:var(--accent); }
+</style>
+<link rel="stylesheet" href="theme.css">
+<link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+<nav>
+  <b>Ostad <span style="color:var(--accent)">Trade</span></b>
+  <div><a href="index.html">نمونه کارها</a><a href="pay.html">درگاه پرداخت</a><a class="active" href="trade.html">ترید استاد</a><a href="guide.html">راهنما</a><a href="pay.html#p2p">P2P</a><a href="https://ostad001bit.lovable.app" target="_blank" rel="noopener">پلتفرم استاد ↗</a></div>
+</nav>
+<header>
+  <img class="medal" src="ostad-medal.jpg" alt="OSTAD" style="width:120px;height:120px">
+  <h1>ترید استاد</h1>
+  <p>سواپ مستقیم روی زنجیره از کیف‌پول شما – PancakeSwap · BNB Chain · محاسبه دقیق گاز</p>
+</header>
+
+<div class="wrap">
+  <div>
+    <div class="panel">
+      <h2>کیف‌پول <span id="netPill" class="pill">قطع</span></h2>
+      <div class="wallet">
+        <button class="btn sm" onclick="connectEvm()">🦊 MetaMask / Trust</button>
+        <button class="btn sm ghost" onclick="connectSol()">👻 Phantom (Solana)</button>
+        <button class="btn sm ghost" onclick="disconnect()" id="discBtn" style="display:none">خروج</button>
+      </div>
+      <div id="acct" class="mono" style="margin-top:10px">—</div>
+      <div id="bals" style="margin-top:6px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs"><button class="sel" onclick="setMode('swap',this)">سواپ</button><button onclick="setMode('limit',this)">سفارش لیمیت</button><button onclick="setMode('send',this)">ارسال</button></div>
+
+      <div id="swapBox">
+        <div class="box">
+          <div class="top"><span>می‌فروشید</span><span>موجودی: <b id="balIn">—</b> <a href="#" onclick="setMax();return false" style="color:var(--accent)">حداکثر</a></span></div>
+          <div class="in"><input id="amtIn" type="number" placeholder="0.0" oninput="quote()"><div class="tok" onclick="pick('in')"><img id="imgIn"><span id="symIn">BNB</span> ▾</div></div>
+          <div class="chips" style="margin-top:8px"><span class="chip" onclick="pct(25)">25%</span><span class="chip" onclick="pct(50)">50%</span><span class="chip" onclick="pct(75)">75%</span><span class="chip" onclick="pct(100)">100%</span></div>
+        </div>
+        <div class="flip"><button onclick="flip()">⇅</button></div>
+        <div class="box">
+          <div class="top"><span>می‌خرید</span><span>موجودی: <b id="balOut">—</b></span></div>
+          <div class="in"><input id="amtOut" type="number" placeholder="0.0" readonly><div class="tok" onclick="pick('out')"><img id="imgOut"><span id="symOut">USDT</span> ▾</div></div>
+        </div>
+
+        <div id="quoteBox" style="margin-top:12px">
+          <div class="row"><span>نرخ</span><span id="qRate">—</span></div>
+          <div class="row"><span>مسیر</span><span id="qRoute">—</span></div>
+          <div class="row" id="qImpRow"><span>تأثیر قیمت</span><span id="qImpact">—</span></div>
+          <div class="row"><span>حداقل دریافتی (slippage)</span><span id="qMin">—</span></div>
+          <div class="row"><span>کارمزد استخر (0.25%)</span><span id="qFee">—</span></div>
+        </div>
+
+        <label>Slippage</label>
+        <div class="chips" id="slipChips"><span class="chip" onclick="setSlip(0.1,this)">0.1%</span><span class="chip sel" onclick="setSlip(0.5,this)">0.5%</span><span class="chip" onclick="setSlip(1,this)">1%</span><span class="chip" onclick="setSlip(3,this)">3%</span><span class="chip" onclick="setSlip(12,this)">12% (توکن با تکس)</span><input id="slipCustom" type="number" placeholder="دستی" style="width:90px;padding:6px 10px" oninput="setSlip(+this.value)"></div>
+        <label>مهلت تراکنش (دقیقه)</label>
+        <input id="deadline" type="number" value="20" min="1">
+
+        <label>⛽ گاز – محاسبه دقیق</label>
+        <div class="gas" id="gasOpts">
+          <div onclick="setGas('slow',this)"><small>اقتصادی</small><b id="gSlow">—</b></div>
+          <div class="sel" onclick="setGas('std',this)"><small>استاندارد</small><b id="gStd">—</b></div>
+          <div onclick="setGas('fast',this)"><small>سریع</small><b id="gFast">—</b></div>
+        </div>
+        <div class="row"><span>تخمین Gas Limit (+۲۰٪ بافر)</span><span id="gLimit">—</span></div>
+        <div class="row" id="gCostRow"><span>هزینه تراکنش</span><span id="gCost">—</span></div>
+        <div class="row" id="gBalRow"><span>BNB برای گاز</span><span id="gBal">—</span></div>
+
+        <button class="btn" id="swapBtn" onclick="doSwap()" disabled>اتصال کیف‌پول</button>
+        <div id="swStatus" class="status info" style="display:none"></div>
+        <p class="note">توکن‌های با تکس انتقال: از «supportingFeeOnTransfer» استفاده می‌شود و slippage ۱۲٪ پیشنهاد می‌گردد. اگر شبیه‌سازی تراکنش خطا بدهد قبل از ارسال هشدار داده می‌شود تا گاز هدر نرود.</p>
+      </div>
+
+      <div id="limitBox" style="display:none">
+        <label>قیمت هدف (USDT به ازای هر <span id="limSym">BNB</span>)</label>
+        <input id="limPrice" type="number" placeholder="مثلاً 600">
+        <label>مقدار</label><input id="limAmt" type="number" placeholder="0.0">
+        <div class="row"><span>قیمت فعلی</span><span id="limNow">—</span></div>
+        <button class="btn" onclick="addLimit()">ثبت سفارش لیمیت (اجرای خودکار در مرورگر)</button>
+        <div id="limList" style="margin-top:10px"></div>
+        <p class="note">سفارش لیمیت در همین مرورگر هر ۳۰ ثانیه قیمت را استعلام می‌کند و وقتی رسید، سواپ را برای امضا به کیف‌پول شما می‌فرستد. باید صفحه باز بماند.</p>
+      </div>
+
+      <div id="sendBox" style="display:none">
+        <label>توکن</label><div class="tok" style="display:inline-flex" onclick="pick('in')"><img id="imgSend"><span id="symSend">BNB</span> ▾</div>
+        <label>آدرس مقصد</label><input id="sendTo" type="text" placeholder="0x…" style="direction:ltr">
+        <label>مقدار</label><input id="sendAmt" type="number" placeholder="0.0">
+        <div class="row"><span>هزینه گاز</span><span id="sendGas">—</span></div>
+        <button class="btn" onclick="doSend()">ارسال</button>
+        <div id="sendStatus" class="status info" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <h2>نمودار لحظه‌ای <span id="chartSym" style="font-size:.8rem;color:var(--muted)"></span></h2>
+      <iframe id="chart" src="" allow="clipboard-write"></iframe>
+    </div>
+    <div class="panel">
+      <h2>بازار توکن‌های استاد <button class="btn sm ghost" onclick="loadMarket()">↻</button></h2>
+      <div style="overflow:auto"><table><thead><tr><th>توکن</th><th>قیمت (USDT)</th><th>نقدینگی</th><th>موجودی شما</th><th></th></tr></thead><tbody id="market"><tr><td colspan="5" class="note">در حال استعلام…</td></tr></tbody></table></div>
+    </div>
+    <div class="panel">
+      <h2>تاریخچه معاملات شما</h2>
+      <div style="overflow:auto"><table><thead><tr><th>زمان</th><th>معامله</th><th>گاز</th><th>وضعیت</th><th>Tx</th></tr></thead><tbody id="hist"><tr><td colspan="5" class="note">هنوز معامله‌ای انجام نشده</td></tr></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="card">
+    <input id="tokSearch" type="text" placeholder="نام، نماد یا آدرس کانترکت (0x…)" oninput="renderList()" style="margin-bottom:10px">
+    <div id="tokList"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<footer>Ostad Trade – ترید استاد · <a href="guide.html">راهنمای استفاده</a> · پشتیبانی: <a href="mailto:iran000bit@gmail.com">iran000bit@gmail.com</a></footer>
+<script src="trust.js"></script>
+<script>
+/* ---------- constants ---------- */
+const $ = id => document.getElementById(id);
+const SRC = 'https://raw.githubusercontent.com/iran000bit-netizen/ostad-tokenlistbnb.json/refs/heads/main/ostad-tokenlist-2.json';
+const BSC_RPC = ['https://bsc-rpc.publicnode.com','https://bsc-dataseed.binance.org','https://bsc-dataseed1.defibit.io','https://bsc-dataseed1.ninicoin.io'];
+const SOL_RPC = ['https://solana-rpc.publicnode.com','https://api.mainnet-beta.solana.com'];
+const ROUTER = '0x10ED43C718714eb63d5aA57B78B54704E256024E', FACTORY = '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73';
+const WBNB = '0xbb4CdB9CBd36B01bD1cBaEbF2De08d9173bc095c', USDT = '0x55d398326f99059fF775485246999027B3197955';
+const NATIVE = { symbol:'BNB', name:'BNB', address:'BNB', decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/info/logo.png' };
+const BASE = [
+  NATIVE,
+  { symbol:'USDT', name:'Tether USD', address:USDT, decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/0x55d398326f99059fF775485246999027B3197955/logo.png' },
+  { symbol:'WBNB', name:'Wrapped BNB', address:WBNB, decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/0xbb4CdB9CBd36B01bD1cBaEbF2De08d9173bc095c/logo.png' },
+  { symbol:'BTCB', name:'Bitcoin BEP20', address:'0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c/logo.png' },
+  { symbol:'ETH', name:'Ethereum BEP20', address:'0x2170Ed0880ac9A755fd29B2688956BD959F933F8', decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/0x2170Ed0880ac9A755fd29B2688956BD959F933F8/logo.png' },
+  { symbol:'USDC', name:'USD Coin', address:'0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d/logo.png' },
+  { symbol:'CAKE', name:'PancakeSwap', address:'0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', decimals:18, logoURI:'https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82/logo.png' },
+];
+let TOKENS = [...BASE], tokIn = BASE[0], tokOut = BASE[1], pickSide='in', slip=0.5, gasTier='std', mode='swap';
+let account=null, chainOk=false, solAccount=null, lastQuote=null, gasPrices={slow:0n,std:0n,fast:0n}, lastGasLimit=0n, bnbBalance=0n;
+const toast = m => { const t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); };
+const sel = s => s.slice(0,10);
+
+/* ---------- ABI helpers ---------- */
+const pad = h => (typeof h==='bigint'?h.toString(16):h.replace(/^0x/,'')).toLowerCase().padStart(64,'0');
+const addrArr = (arr, headSlots) => { const parts=[]; return { head: pad(BigInt(headSlots*32)), tail: pad(BigInt(arr.length)) + arr.map(pad).join('') }; };
+function encodeSwap(name, args){
+  // args: {amountIn?, amountOutMin, path, to, deadline}
+  const isNativeIn = name.startsWith('swapExactETH');
+  const staticArgs = isNativeIn ? [args.amountOutMin, null, args.to, args.deadline] : [args.amountIn, args.amountOutMin, null, args.to, args.deadline];
+  const headSlots = staticArgs.length;
+  let head='', tail='';
+  for(const a of staticArgs){ if(a===null){ head += pad(BigInt(headSlots*32)); } else head += pad(typeof a==='bigint'?a:BigInt(a)); }
+  tail = pad(BigInt(args.path.length)) + args.path.map(pad).join('');
+  return SELECTORS[name] + head + tail;
+}
+const SELECTORS = {
+  swapExactETHForTokensSupportingFeeOnTransferTokens:'0xb6f9de95',
+  swapExactTokensForETHSupportingFeeOnTransferTokens:'0x791ac947',
+  swapExactTokensForTokensSupportingFeeOnTransferTokens:'0x5c11d795',
+  swapExactETHForTokens:'0x7ff36ab5', swapExactTokensForETH:'0x18cbafe5', swapExactTokensForTokens:'0x38ed1739',
+};
+const parseUnits = (s, d) => { s=String(s).trim(); if(!s) return 0n; const [i,f='']=s.split('.'); return BigInt(i||'0')*10n**BigInt(d) + BigInt((f+'0'.repeat(d)).slice(0,d)||'0'); };
+const fmtUnits = (b, d, p=6) => { b=BigInt(b); const neg=b<0n; if(neg)b=-b; const s=b.toString().padStart(d+1,'0'); let r=s.slice(0,s.length-d)+'.'+s.slice(s.length-d,s.length-d+p); r=r.replace(/\.?0+$/,''); return (neg?'-':'')+(r||'0'); };
+const fmt = (n,p=6) => Number(n).toLocaleString('en-US',{maximumFractionDigits:p});
+
+/* ---------- RPC ---------- */
+async function rpc(urls, method, params){
+  let err; for(const url of urls){ try{ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})}); if(!r.ok) throw new Error('HTTP '+r.status); const j=await r.json(); if(j.error) throw new Error(j.error.message); return j.result; }catch(e){ err=e; } }
+  throw err||new Error('RPC unavailable');
+}
+const call = (to,data) => rpc(BSC_RPC,'eth_call',[{to,data},'latest']);
+const erc = { balanceOf:'0x70a08231', allowance:'0xdd62ed3e', approve:'0x095ea7b3', decimals:'0x313ce567', symbol:'0x95d89b41', name:'0x06fdde03', transfer:'0xa9059cbb' };
+const isNative = t => t.address==='BNB';
+const addrOf = t => isNative(t)?WBNB:t.address;
+async function balanceOf(t, owner){ if(!owner) return 0n; if(isNative(t)) return BigInt(await rpc(BSC_RPC,'eth_getBalance',[owner,'latest'])); const r=await call(t.address, erc.balanceOf+pad(owner)); return r&&r!=='0x'?BigInt(r):0n; }
+function decodeStr(hex){ try{ const h=hex.slice(2); const len=Number(BigInt('0x'+h.slice(64,128))); const bytes=h.slice(128,128+len*2).match(/../g).map(x=>parseInt(x,16)); return new TextDecoder().decode(new Uint8Array(bytes)); }catch(e){ return ''; } }
+async function tokenInfo(addr){
+  const [d,s,n]=await Promise.all([call(addr,erc.decimals),call(addr,erc.symbol),call(addr,erc.name)]);
+  return { address:addr, decimals:Number(BigInt(d)), symbol:decodeStr(s)||'TOKEN', name:decodeStr(n)||addr, logoURI:`https://assets-cdn.trustwallet.com/blockchains/smartchain/assets/${addr}/logo.png` };
+}
+const getPair = async (a,b) => { const r=await call(FACTORY,'0xe6a43905'+pad(a)+pad(b)); const p='0x'+r.slice(-40); return /^0x0+$/.test(p)?null:p; };
+async function reserves(pair){ const [r,t0]=await Promise.all([call(pair,'0x0902f1ac'),call(pair,'0x0dfe1681')]); const h=r.slice(2); return { r0:BigInt('0x'+h.slice(0,64)), r1:BigInt('0x'+h.slice(64,128)), t0:'0x'+t0.slice(-40) }; };
+function getAmountOut(aIn, rIn, rOut){ const f=aIn*9975n; return f*rOut/(rIn*10000n+f); }
+async function bestRoute(a, b, amountIn){
+  // try direct, via WBNB, via USDT
+  const cands=[[a,b],[a,WBNB,b],[a,USDT,b]].filter(p=>new Set(p.map(x=>x.toLowerCase())).size===p.length);
+  let best=null;
+  for(const path of cands){
+    try{
+      let amt=amountIn, impact=0, ok=true;
+      for(let i=0;i<path.length-1;i++){
+        const pair=await getPair(path[i],path[i+1]); if(!pair){ ok=false; break; }
+        const {r0,r1,t0}=await reserves(pair); const [rIn,rOut]= t0.toLowerCase()===path[i].toLowerCase()?[r0,r1]:[r1,r0];
+        if(rIn===0n||rOut===0n){ ok=false; break; }
+        const out=getAmountOut(amt,rIn,rOut);
+        impact += 1 - Number(out*10000n/rOut)/Number(amt*10000n/rIn||1n) ; // rough
+        const spot = Number(rOut)/Number(rIn); const exec = Number(out)/Number(amt); impact = 1-exec/spot;
+        amt=out;
+      }
+      if(ok && (!best||amt>best.out)) best={path,out:amt,impact};
+    }catch(e){}
+  }
+  return best;
+}
+
+/* ---------- wallet ---------- */
+const eth = () => window.ethereum;
+async function connectEvm(){
+  if(!eth()) return toast('کیف‌پول پیدا نشد – MetaMask یا Trust Wallet نصب کنید یا در مرورگر کیف‌پول باز کنید');
+  try{
+    const [a]=await eth().request({method:'eth_requestAccounts'}); account=a;
+    await ensureChain();
+    eth().on?.('accountsChanged', x=>{ account=x[0]||null; onAccount(); });
+    eth().on?.('chainChanged', ()=>{ ensureChain().then(onAccount); });
+    onAccount();
+  }catch(e){ toast('اتصال رد شد: '+(e.message||e)); }
+}
+async function ensureChain(){
+  const id=await eth().request({method:'eth_chainId'});
+  if(id==='0x38'){ chainOk=true; return; }
+  try{ await eth().request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]}); chainOk=true; }
+  catch(e){ if(e.code===4902){ await eth().request({method:'wallet_addEthereumChain',params:[{chainId:'0x38',chainName:'BNB Smart Chain',nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},rpcUrls:['https://bsc-dataseed.binance.org'],blockExplorerUrls:['https://bscscan.com']}]}); chainOk=true; } else { chainOk=false; toast('لطفاً شبکه را به BNB Chain تغییر دهید'); } }
+}
+async function connectSol(){
+  const p=window.solana||window.phantom?.solana; if(!p) return toast('Phantom پیدا نشد');
+  try{ const r=await p.connect(); solAccount=r.publicKey.toString(); const lam=await rpc(SOL_RPC,'getBalance',[solAccount]); toast('Phantom متصل شد'); $('acct').innerHTML += `<br>Solana: ${solAccount} · ${(lam.value/1e9).toFixed(4)} SOL`; }catch(e){ toast('اتصال Phantom رد شد'); }
+}
+function disconnect(){ account=null; chainOk=false; onAccount(); }
+async function onAccount(){
+  $('netPill').textContent = account ? (chainOk?'BNB Chain ✓':'شبکه نادرست') : 'قطع'; $('netPill').className='pill'+(account&&chainOk?' ok':'');
+  $('acct').textContent = account || '—'; $('discBtn').style.display=account?'':'none';
+  $('swapBtn').textContent = account ? 'سواپ' : 'اتصال کیف‌پول'; $('swapBtn').disabled = !account;
+  if(!account){ $('bals').innerHTML=''; $('balIn').textContent=$('balOut').textContent='—'; return; }
+  refreshBalances(); loadMarket(); renderHist();
+}
+async function refreshBalances(){
+  if(!account) return;
+  try{
+    const [bi,bo,bnb]=await Promise.all([balanceOf(tokIn,account),balanceOf(tokOut,account),rpc(BSC_RPC,'eth_getBalance',[account,'latest'])]);
+    bnbBalance=BigInt(bnb);
+    $('balIn').textContent=fmtUnits(bi,tokIn.decimals); $('balOut').textContent=fmtUnits(bo,tokOut.decimals);
+    $('gBal').textContent=fmtUnits(bnbBalance,18)+' BNB';
+    tokIn._bal=bi; tokOut._bal=bo;
+  }catch(e){}
+}
+
+/* ---------- gas ---------- */
+async function loadGas(){
+  try{
+    const gp=BigInt(await rpc(BSC_RPC,'eth_gasPrice',[]));
+    let base=gp; try{ const fh=await rpc(BSC_RPC,'eth_feeHistory',['0x5','latest',[25,50,75]]); const rew=fh.reward.map(r=>r.map(x=>BigInt(x))); const med=i=>rew.map(r=>r[i]).sort((a,b)=>a<b?-1:1)[Math.floor(rew.length/2)]; const bf=BigInt(fh.baseFeePerGas.at(-1)); gasPrices={slow:bf+med(0),std:bf+med(1),fast:bf+med(2)}; }
+    catch(e){ gasPrices={slow:gp*9n/10n,std:gp,fast:gp*13n/10n}; }
+    // BSC min gas price is typically 0.1 gwei; clamp
+    const min=100000000n; for(const k in gasPrices) if(gasPrices[k]<min) gasPrices[k]=min;
+    $('gSlow').textContent=fmtUnits(gasPrices.slow,9,2)+' gwei'; $('gStd').textContent=fmtUnits(gasPrices.std,9,2)+' gwei'; $('gFast').textContent=fmtUnits(gasPrices.fast,9,2)+' gwei';
+    updateGasCost();
+  }catch(e){}
+}
+function setGas(t,el){ gasTier=t; document.querySelectorAll('#gasOpts div').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); updateGasCost(); }
+async function estimateGas(tx){
+  try{ const g=BigInt(await rpc(BSC_RPC,'eth_estimateGas',[tx])); return g*12n/10n; }
+  catch(e){ throw new Error('شبیه‌سازی تراکنش ناموفق: '+(e.message||'').slice(0,120)); }
+}
+function updateGasCost(){
+  if(!lastGasLimit){ $('gLimit').textContent='—'; $('gCost').textContent='—'; return; }
+  const cost=lastGasLimit*gasPrices[gasTier];
+  $('gLimit').textContent=lastGasLimit.toString(); $('gCost').textContent=fmtUnits(cost,18,6)+' BNB'+(bnbUsd?` ≈ $${(Number(fmtUnits(cost,18,8))*bnbUsd).toFixed(3)}`:'');
+  const need = cost + (isNative(tokIn)&&lastQuote? lastQuote.amountIn : 0n);
+  const row=$('gBalRow'); row.className='row '+(bnbBalance>=need?'ok':'warn');
+  $('gBal').textContent = fmtUnits(bnbBalance,18)+' BNB'+(bnbBalance<need?` – کم است! حداقل ${fmtUnits(need,18,6)} لازم است`:' ✓');
+}
+let bnbUsd=0;
+
+/* ---------- quote ---------- */
+let qTimer;
+function quote(){ clearTimeout(qTimer); qTimer=setTimeout(_quote,350); }
+async function _quote(){
+  const v=$('amtIn').value; lastQuote=null; lastGasLimit=0n;
+  if(!v||+v<=0){ $('amtOut').value=''; ['qRate','qRoute','qImpact','qMin','qFee'].forEach(i=>$(i).textContent='—'); updateGasCost(); return; }
+  const amountIn=parseUnits(v,tokIn.decimals);
+  const st=$('swStatus'); st.style.display='none';
+  try{
+    const r=await bestRoute(addrOf(tokIn),addrOf(tokOut),amountIn);
+    if(!r){ $('amtOut').value=''; $('qRoute').textContent='مسیر/استخری پیدا نشد'; return; }
+    const minOut = r.out*BigInt(Math.round((100-slip)*1000))/100000n;
+    lastQuote={amountIn,out:r.out,minOut,path:r.path,impact:r.impact};
+    $('amtOut').value=fmtUnits(r.out,tokOut.decimals,8);
+    $('qRate').textContent=`1 ${tokIn.symbol} = ${fmt(Number(fmtUnits(r.out,tokOut.decimals,10))/Number(v),8)} ${tokOut.symbol}`;
+    $('qRoute').textContent=r.path.map(a=>symOf(a)).join(' → ');
+    const imp=(r.impact*100); $('qImpact').textContent=imp.toFixed(2)+'%'; $('qImpRow').className='row '+(imp>5?'warn':imp>1?'':'ok');
+    $('qMin').textContent=fmtUnits(minOut,tokOut.decimals,8)+' '+tokOut.symbol;
+    $('qFee').textContent=fmtUnits(amountIn*25n/10000n,tokIn.decimals,8)+' '+tokIn.symbol;
+    if(account&&chainOk){ try{ const tx=await buildSwapTx(); lastGasLimit=await estimateGas(tx); }catch(e){ lastGasLimit=250000n; st.style.display='block'; st.className='status lock'; st.textContent='⚠ '+e.message+' (احتمالاً approve لازم است یا موجودی کافی نیست) – gas پیش‌فرض 250k'; } }
+    else lastGasLimit=200000n;
+    updateGasCost();
+  }catch(e){ $('qRoute').textContent='خطا: '+(e.message||e).slice(0,80); }
+}
+const symOf = a => { a=a.toLowerCase(); if(a===WBNB.toLowerCase()) return 'BNB'; const t=TOKENS.find(t=>t.address.toLowerCase()===a); return t?t.symbol:a.slice(0,6); };
+async function buildSwapTx(){
+  const q=lastQuote; const deadline=BigInt(Math.floor(Date.now()/1000)+60*(+$('deadline').value||20));
+  let name, value='0x0';
+  if(isNative(tokIn)){ name='swapExactETHForTokensSupportingFeeOnTransferTokens'; value='0x'+q.amountIn.toString(16); }
+  else if(isNative(tokOut)) name='swapExactTokensForETHSupportingFeeOnTransferTokens';
+  else name='swapExactTokensForTokensSupportingFeeOnTransferTokens';
+  const data=encodeSwap(name,{amountIn:q.amountIn,amountOutMin:q.minOut,path:q.path,to:account,deadline});
+  return { from:account, to:ROUTER, data, value };
+}
+
+/* ---------- swap ---------- */
+async function ensureAllowance(t, amount){
+  if(isNative(t)) return;
+  const cur=BigInt(await call(t.address, erc.allowance+pad(account)+pad(ROUTER))||'0x0');
+  if(cur>=amount) return;
+  const st=$('swStatus'); st.style.display='block'; st.className='status info'; st.textContent='مرحله ۱/۲: تأیید (approve) توکن در کیف‌پول…';
+  const data=erc.approve+pad(ROUTER)+pad(amount);
+  const gas=await estimateGas({from:account,to:t.address,data});
+  const h=await eth().request({method:'eth_sendTransaction',params:[{from:account,to:t.address,data,gas:'0x'+gas.toString(16),gasPrice:'0x'+gasPrices[gasTier].toString(16)}]});
+  st.textContent='در انتظار تأیید approve روی شبکه…'; await waitTx(h);
+}
+async function waitTx(h){ for(let i=0;i<60;i++){ const r=await rpc(BSC_RPC,'eth_getTransactionReceipt',[h]); if(r) return r; await new Promise(r=>setTimeout(r,2500)); } throw new Error('تراکنش هنوز تأیید نشده: '+h); }
+async function doSwap(){
+  if(!account) return connectEvm();
+  if(!chainOk) return ensureChain();
+  if(!lastQuote) return toast('اول مقدار را وارد کنید');
+  const st=$('swStatus'); st.style.display='block'; st.className='status info';
+  try{
+    if(tokIn._bal!==undefined && tokIn._bal<lastQuote.amountIn) throw new Error('موجودی '+tokIn.symbol+' کافی نیست');
+    await ensureAllowance(tokIn,lastQuote.amountIn);
+    st.textContent='شبیه‌سازی و محاسبه گاز…';
+    const tx=await buildSwapTx(); const gas=await estimateGas(tx); lastGasLimit=gas; updateGasCost();
+    const cost=gas*gasPrices[gasTier]+(isNative(tokIn)?lastQuote.amountIn:0n);
+    if(bnbBalance<cost) throw new Error(`BNB برای گاز کافی نیست – نیاز: ${fmtUnits(cost,18,6)} BNB، موجودی: ${fmtUnits(bnbBalance,18,6)}`);
+    if(lastQuote.impact>0.15 && !confirm('تأثیر قیمت بیش از ۱۵٪ است. ادامه می‌دهید؟')) { st.style.display='none'; return; }
+    st.textContent='امضای تراکنش در کیف‌پول…';
+    const h=await eth().request({method:'eth_sendTransaction',params:[{...tx,gas:'0x'+gas.toString(16),gasPrice:'0x'+gasPrices[gasTier].toString(16)}]});
+    const rec={t:Date.now(),desc:`${$('amtIn').value} ${tokIn.symbol} → ${$('amtOut').value} ${tokOut.symbol}`,tx:h,status:'pending',gas:''}; pushHist(rec);
+    st.innerHTML=`ارسال شد – در انتظار تأیید… <a href="https://bscscan.com/tx/${h}" target="_blank" style="color:var(--accent)">BscScan</a>`;
+    const r=await waitTx(h); rec.status=r.status==='0x1'?'ok':'fail'; rec.gas=fmtUnits(BigInt(r.gasUsed)*BigInt(r.effectiveGasPrice||gasPrices[gasTier]),18,6)+' BNB'; pushHist(rec,true);
+    st.className='status '+(rec.status==='ok'?'ok':'lock'); st.innerHTML=(rec.status==='ok'?'✓ سواپ با موفقیت انجام شد':'✗ تراکنش revert شد')+` · گاز واقعی: ${rec.gas} · <a href="https://bscscan.com/tx/${h}" target="_blank" style="color:inherit">BscScan</a>`;
+    $('amtIn').value=''; $('amtOut').value=''; refreshBalances(); loadMarket();
+  }catch(e){ st.className='status lock'; st.textContent='✗ '+(e.message||e).slice(0,200); }
+}
+
+/* ---------- send ---------- */
+async function doSend(){
+  if(!account) return connectEvm();
+  const to=$('sendTo').value.trim(), v=$('sendAmt').value, st=$('sendStatus'); st.style.display='block'; st.className='status info';
+  if(!/^0x[0-9a-fA-F]{40}$/.test(to)) { st.className='status lock'; st.textContent='آدرس مقصد نامعتبر'; return; }
+  try{
+    const amt=parseUnits(v,tokIn.decimals);
+    const tx = isNative(tokIn) ? {from:account,to,value:'0x'+amt.toString(16)} : {from:account,to:tokIn.address,data:erc.transfer+pad(to)+pad(amt)};
+    const gas=await estimateGas(tx); $('sendGas').textContent=fmtUnits(gas*gasPrices[gasTier],18,6)+' BNB';
+    st.textContent='امضا در کیف‌پول…';
+    const h=await eth().request({method:'eth_sendTransaction',params:[{...tx,gas:'0x'+gas.toString(16),gasPrice:'0x'+gasPrices[gasTier].toString(16)}]});
+    pushHist({t:Date.now(),desc:`ارسال ${v} ${tokIn.symbol}`,tx:h,status:'pending',gas:''});
+    st.className='status ok'; st.innerHTML=`ارسال شد · <a href="https://bscscan.com/tx/${h}" target="_blank" style="color:inherit">BscScan</a>`;
+    waitTx(h).then(r=>{ pushHist({t:0,tx:h,status:r.status==='0x1'?'ok':'fail',gas:fmtUnits(BigInt(r.gasUsed)*gasPrices[gasTier],18,6)+' BNB'},true); refreshBalances(); });
+  }catch(e){ st.className='status lock'; st.textContent='✗ '+(e.message||e).slice(0,200); }
+}
+
+/* ---------- limit orders (browser-side) ---------- */
+function getLimits(){ try{ return JSON.parse(localStorage.getItem('ostadLimits')||'[]'); }catch(e){ return []; } }
+function addLimit(){
+  const p=+$('limPrice').value, a=+$('limAmt').value; if(!(p>0&&a>0)) return toast('قیمت و مقدار را وارد کنید');
+  const l=getLimits(); l.push({id:Date.now(),inA:tokIn.address,inS:tokIn.symbol,inD:tokIn.decimals,outA:tokOut.address,outS:tokOut.symbol,outD:tokOut.decimals,price:p,amt:a,t:Date.now(),status:'open'});
+  localStorage.setItem('ostadLimits',JSON.stringify(l)); renderLimits(); toast('سفارش لیمیت ثبت شد');
+}
+function renderLimits(){ const l=getLimits(); $('limList').innerHTML=l.length?l.map(o=>`<div class="row"><span>${o.amt} ${o.inS} → ${o.outS} @ ${o.price}</span><span>${o.status==='open'?'⏳ فعال':o.status==='filled'?'✓ اجرا شد':o.status} <a href="#" onclick="delLimit(${o.id});return false" style="color:#f66">✕</a></span></div>`).join(''):'<p class="note">سفارش لیمیتی ندارید</p>'; }
+function delLimit(id){ localStorage.setItem('ostadLimits',JSON.stringify(getLimits().filter(o=>o.id!==id))); renderLimits(); }
+async function checkLimits(){
+  const l=getLimits(); let changed=false;
+  for(const o of l){ if(o.status!=='open') continue;
+    try{ const one=parseUnits('1',o.inD); const r=await bestRoute(o.inA==='BNB'?WBNB:o.inA, USDT, one); if(!r) continue; const px=Number(fmtUnits(r.out,18,8));
+      if(px>=o.price && account){ o.status='triggered'; changed=true; toast(`قیمت ${o.inS} به ${o.price} رسید – سواپ را امضا کنید`); tokIn=TOKENS.find(t=>t.address===o.inA)||tokIn; tokOut=TOKENS.find(t=>t.address===o.outA)||tokOut; paintTokens(); $('amtIn').value=o.amt; await _quote(); await doSwap(); o.status='filled'; }
+    }catch(e){} }
+  if(changed){ localStorage.setItem('ostadLimits',JSON.stringify(l)); renderLimits(); }
+}
+setInterval(checkLimits,30000);
+
+/* ---------- history ---------- */
+function getHist(){ try{ return JSON.parse(localStorage.getItem('ostadTradeHist')||'[]'); }catch(e){ return []; } }
+function pushHist(r,update){ const l=getHist(); const i=l.findIndex(x=>x.tx===r.tx); if(i>=0) l[i]={...l[i],...r,t:l[i].t}; else l.unshift(r); localStorage.setItem('ostadTradeHist',JSON.stringify(l.slice(0,100))); renderHist(); }
+function renderHist(){ const l=getHist(); $('hist').innerHTML=l.length?l.map(r=>`<tr><td>${new Date(r.t).toLocaleString('fa-IR')}</td><td>${r.desc||''}</td><td dir="ltr">${r.gas||'—'}</td><td>${r.status==='ok'?'<span style="color:var(--ok)">✓</span>':r.status==='fail'?'<span style="color:#f66">✗</span>':'⏳'}</td><td><a href="https://bscscan.com/tx/${r.tx}" target="_blank">${r.tx.slice(0,10)}…</a></td></tr>`).join(''):'<tr><td colspan="5" class="note">هنوز معامله‌ای انجام نشده</td></tr>'; }
+
+/* ---------- token picker ---------- */
+function pick(side){ pickSide=side; $('modal').classList.add('on'); $('tokSearch').value=''; renderList(); }
+function closeModal(){ $('modal').classList.remove('on'); }
+async function renderList(){
+  const q=$('tokSearch').value.trim().toLowerCase();
+  if(/^0x[0-9a-f]{40}$/.test(q) && !TOKENS.some(t=>t.address.toLowerCase()===q)){ try{ const t=await tokenInfo(q); TOKENS.push(t); }catch(e){} }
+  const l=TOKENS.filter(t=>!q||t.symbol.toLowerCase().includes(q)||t.name.toLowerCase().includes(q)||t.address.toLowerCase()===q);
+  $('tokList').innerHTML=l.map((t,i)=>`<div class="tl" onclick="choose(${TOKENS.indexOf(t)})"><img src="${t.logoURI||''}" onerror="this.style.visibility='hidden'"><div><b>${t.symbol}</b><small>${t.name}</small><small>${t.address==='BNB'?'native':t.address}</small></div><span class="bal">${t._bal!==undefined?fmtUnits(t._bal,t.decimals,4):''}</span></div>`).join('')||'<p class="note">پیدا نشد – آدرس کانترکت را وارد کنید</p>';
+}
+function choose(i){ const t=TOKENS[i]; if(pickSide==='in'){ if(t===tokOut) tokOut=tokIn; tokIn=t; } else { if(t===tokIn) tokIn=tokOut; tokOut=t; } closeModal(); paintTokens(); refreshBalances(); quote(); }
+function flip(){ [tokIn,tokOut]=[tokOut,tokIn]; paintTokens(); refreshBalances(); $('amtIn').value=$('amtOut').value; quote(); }
+function paintTokens(){
+  $('symIn').textContent=tokIn.symbol; $('imgIn').src=tokIn.logoURI||''; $('symOut').textContent=tokOut.symbol; $('imgOut').src=tokOut.logoURI||'';
+  $('symSend').textContent=tokIn.symbol; $('imgSend').src=tokIn.logoURI||''; $('limSym').textContent=tokIn.symbol;
+  const ct = isNative(tokIn)&&!isNative(tokOut)?tokOut:tokIn; $('chartSym').textContent=ct.symbol;
+  $('chart').src=`https://dexscreener.com/bsc/${addrOf(ct)}?embed=1&theme=dark&trades=0&info=0`;
+  updateLimitNow();
+}
+async function updateLimitNow(){ try{ const r=await bestRoute(addrOf(tokIn),USDT,parseUnits('1',tokIn.decimals)); $('limNow').textContent=r?fmt(fmtUnits(r.out,18,6))+' USDT':'—'; }catch(e){} }
+function setMax(){ if(tokIn._bal===undefined) return; let b=tokIn._bal; if(isNative(tokIn)) b = b>parseUnits('0.002',18)?b-parseUnits('0.002',18):0n; $('amtIn').value=fmtUnits(b,tokIn.decimals,8); quote(); }
+function pct(p){ if(tokIn._bal===undefined) return; let b=tokIn._bal*BigInt(p)/100n; if(p===100) return setMax(); $('amtIn').value=fmtUnits(b,tokIn.decimals,8); quote(); }
+function setSlip(v,el){ if(!(v>0)) return; slip=v; document.querySelectorAll('#slipChips .chip').forEach(c=>c.classList.remove('sel')); if(el) el.classList.add('sel'); quote(); }
+function setMode(m,el){ mode=m; document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); $('swapBox').style.display=m==='swap'?'':'none'; $('limitBox').style.display=m==='limit'?'':'none'; $('sendBox').style.display=m==='send'?'':'none'; if(m==='limit') renderLimits(); }
+
+/* ---------- market ---------- */
+async function loadMarket(){
+  const list=TOKENS.filter(t=>!isNative(t)&&t.address.toLowerCase()!==USDT.toLowerCase()&&t.address.toLowerCase()!==WBNB.toLowerCase());
+  const rows=await Promise.all(list.map(async t=>{
+    try{
+      const one=parseUnits('1',t.decimals); const r=await bestRoute(t.address,USDT,one); const px=r?Number(fmtUnits(r.out,18,10)):0;
+      let liq='—'; const pair=await getPair(t.address,WBNB)||await getPair(t.address,USDT); if(pair){ const {r0,r1,t0}=await reserves(pair); const quoteRes = t0.toLowerCase()===t.address.toLowerCase()?r1:r0; const isB = (await call(pair,'0xd21220a7')).slice(-40).toLowerCase()===WBNB.slice(2).toLowerCase() || t0.toLowerCase()===WBNB.toLowerCase(); const usd = Number(fmtUnits(quoteRes,18,6))*(isB?bnbUsd:1)*2; liq='$'+fmt(usd,0); }
+      const bal = account? await balanceOf(t,account):null; if(bal!==null) t._bal=bal;
+      return {t,px,liq,bal};
+    }catch(e){ return {t,px:0,liq:'—',bal:null}; }
+  }));
+  $('market').innerHTML=rows.map(({t,px,liq,bal})=>`<tr><td><img src="${t.logoURI||''}" style="width:18px;height:18px;border-radius:50%;vertical-align:middle;margin-left:6px" onerror="this.remove()"><b>${t.symbol}</b></td><td dir="ltr">${px?(px<0.000001?px.toExponential(3):fmt(px,8)):'—'}</td><td dir="ltr">${liq}</td><td dir="ltr">${bal!==null?fmtUnits(bal,t.decimals,4):'—'}</td><td><button class="btn sm ghost" onclick="tradeTok('${t.address}')">ترید</button></td></tr>`).join('');
+}
+function tradeTok(a){ const t=TOKENS.find(x=>x.address===a); if(!t) return; tokIn=NATIVE; tokOut=t; paintTokens(); refreshBalances(); quote(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* ---------- init ---------- */
+(async()=>{
+  try{ const j=await (await fetch(SRC)).json(); const seen=new Set(TOKENS.map(t=>t.address.toLowerCase()));
+    for(const t of (j.tokens||[])){ if(t.chainId!==56||!t.address||seen.has(t.address.toLowerCase())) continue; seen.add(t.address.toLowerCase()); TOKENS.push({symbol:t.symbol,name:t.name,address:t.address,decimals:t.decimals??18,logoURI:t.logoURI}); }
+  }catch(e){}
+  try{ const r=await bestRoute(WBNB,USDT,parseUnits('1',18)); bnbUsd=Number(fmtUnits(r.out,18,4)); }catch(e){}
+  paintTokens(); loadGas(); setInterval(loadGas,15000); loadMarket(); renderHist();
+  if(eth()){ try{ const acc=await eth().request({method:'eth_accounts'}); if(acc[0]){ account=acc[0]; await ensureChain(); onAccount(); } }catch(e){} }
+})();
+</script>
+</body>
+</html>
