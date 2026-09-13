@@ -77,6 +77,35 @@
       <a class="primary" href="https://ostad001bit.lovable.app" target="_blank" rel="noopener">🏛 پلتفرم استاد – ostad001bit.lovable.app</a>
       <a class="ghost" href="mailto:iran000bit@gmail.com?subject=Ostad%20Pay">✉ iran000bit@gmail.com</a>
     </div></div>`;
+  const P2P = [
+    ['Binance P2P','p2p.binance.com/trade/all-payments/USDT?fiat=USD','p2p.binance.com'],
+    ['Bybit P2P','www.bybit.com/fiat/trade/otc?actionType=1&token=USDT','bybit.com'],
+    ['OKX P2P','www.okx.com/p2p-markets/usd/buy-usdt','okx.com'],
+    ['KuCoin P2P','www.kucoin.com/otc/buy/USDT-USD','kucoin.com'],
+    ['HTX P2P','www.htx.com/fiat-crypto/trade/buy-usdt-usd','htx.com'],
+    ['Bitget P2P','www.bitget.com/p2p-trade/buy/USDT','bitget.com'],
+    ['MEXC P2P','otc.mexc.com/buy/USDT','mexc.com'],
+    ['Gate P2P','www.gate.io/p2p/buy/USDT','gate.io'],
+    ['Paxful','paxful.com/buy-tether','paxful.com'],
+    ['Noones','noones.com/buy-tether','noones.com'],
+    ['Hodl Hodl','hodlhodl.com/offers/buy','hodlhodl.com'],
+    ['Bisq','bisq.network','bisq.network'],
+    ['نوبیتکس','nobitex.ir','nobitex.ir'],
+    ['والکس','wallex.ir','wallex.ir'],
+    ['تبدیل','tabdeal.org','tabdeal.org'],
+    ['بیت‌پین','bitpin.ir','bitpin.ir'],
+    ['رمزینکس','ramzinex.com','ramzinex.com'],
+    ['اکسیر','exir.io','exir.io'],
+  ];
+  const p2p = document.createElement('section'); p2p.className = 'trust'; p2p.id = 'p2p';
+  p2p.innerHTML = `
+    <details open>
+      <summary><span>پلتفرم‌های P2P – لینک مستقیم خرید و فروش تتر</span></summary>
+      <div class="body">
+        <p>برای پرداخت سفارش، تتر را از هر یک از این بازارهای P2P تهیه کنید و به آدرس فاکتور واریز نمایید (لینک‌ها مستقیم به صفحه خرید USDT)</p>
+        <div class="exch">${P2P.map(([n,u,d])=>`<a href="https://${u}" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=${d}&sz=64" alt="${n}"><div><span>${n}</span><small>${d}</small></div><i class="verified"></i></a>`).join('')}</div>
+      </div>
+    </details>`;
   const footer = document.querySelector('footer');
-  footer ? footer.before(sec, contact) : document.body.append(sec, contact);
+  footer ? footer.before(p2p, sec, contact) : document.body.append(p2p, sec, contact);
 })();
